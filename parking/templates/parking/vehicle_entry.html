@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆进场登记</title>
+</head>
+<body>
+    <h1>车辆进场登记</h1>
+
+    <!-- 显示表单的错误信息 -->
+    {% if form.errors %}
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- 车辆进场登记表单 -->
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- 以段落形式展示表单字段 -->
+        <button type="submit">提交</button>
+    </form>
+
+    <p><a href="{% url 'vehicle_list' %}">返回车辆列表</a></p>
+    <p><a href="{% url 'index' %}">返回主页</a></p>
+</body>
+</html>

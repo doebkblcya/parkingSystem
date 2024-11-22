@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>车辆列表</title>
+</head>
+<body>
+    <h1>当前在场车辆列表</h1>
+
+    {% if vehicles %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>车牌号</th>
+                    <th>入场时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                    <tr>
+                        <td>{{ vehicle.license_plate }}</td>
+                        <td>{{ vehicle.entry_time }}</td>
+                        <td>
+                            <a href="{% url 'vehicle_exit' vehicle.license_plate %}">出场登记</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>当前没有车辆在场。</p>
+    {% endif %}
+
+    <p><a href="{% url 'vehicle_entry' %}">登记新车辆进场</a></p>
+    <p><a href="{% url 'index' %}">返回主页</a></p>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>停车场车辆管理系统</title>
+</head>
+<body>
+    <h1>欢迎使用停车场车辆管理系统</h1>
+    
+    <p>当前在场车辆数量：{{ current_vehicle_count }}</p>
+    
+    <h2>功能导航</h2>
+    <ul>
+        <li><a href="{% url 'vehicle_entry' %}">车辆进场登记</a></li>
+        {% for vehicle in vehicles %}
+        {% if vehicle.license_plate %}
+        <li>
+        <a href="{% url 'vehicle_exit' license_plate=vehicle.license_plate %}">
+            车辆出场登记（车牌号：{{ vehicle.license_plate }}）
+        </a>
+        </li>
+        {% else %}
+        <li>车牌号缺失</li>
+        {% endif %}
+        {% empty %}
+        <li>当前没有在场车辆</li>
+        {% endfor %}
+        <li><a href="{% url 'vehicle_list' %}">查看当前车辆列表</a></li>
+        <li><a href="{% url 'vehicle_history' %}">查询历史记录</a></li>
+    </ul>
+</body>
+</html>
