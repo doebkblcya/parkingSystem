@@ -1,20 +1,54 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>用户登录</title>
-</head>
-<body>
-  <h1>用户登录</h1>
+{% extends 'parking/base.html' %}
 
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">登录</button>
-  </form>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center mb-4">登录</h2>
 
-  <p>没有账户？ <a href="{% url 'register' %}">点击这里注册</a></p>
+        <!-- 错误提示区域 -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-</body>
-</html>
+        <form method="POST" class="shadow-sm p-4 border rounded">
+            {% csrf_token %}
+            
+            <!-- 用户名 -->
+            <div class="mb-3">
+                <label for="id_username" class="form-label">用户名</label>
+                <input type="text" name="username" id="id_username" class="form-control" placeholder="请输入用户名" value="{{ form.username.value|default:'' }}">
+                {% if form.username.errors %}
+                    <div class="text-danger">
+                        {% for error in form.username.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- 密码 -->
+            <div class="mb-3">
+                <label for="id_password" class="form-label">密码</label>
+                <input type="password" name="password" id="id_password" class="form-control" placeholder="请输入密码">
+                {% if form.password.errors %}
+                    <div class="text-danger">
+                        {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">登录</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>还没有账户？ <a href="{% url 'user:register' %}">点击注册</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

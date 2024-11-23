@@ -1,31 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>停车场车辆管理系统</title>
-</head>
-<body>
-    <h1>欢迎使用停车场车辆管理系统</h1>
-    
-    <p>当前在场车辆数量：{{ current_vehicle_count }}</p>
-    
-    <h2>功能导航</h2>
-    <ul>
-        <li><a href="{% url 'vehicle_entry' %}">车辆进场登记</a></li>
-        {% for vehicle in vehicles %}
-        {% if vehicle.license_plate %}
-        <li>
-        <a href="{% url 'vehicle_exit' license_plate=vehicle.license_plate %}">
-            车辆出场登记（车牌号：{{ vehicle.license_plate }}）
-        </a>
-        </li>
-        {% else %}
-        <li>车牌号缺失</li>
-        {% endif %}
-        {% empty %}
-        <li>当前没有在场车辆</li>
-        {% endfor %}
-        <li><a href="{% url 'vehicle_list' %}">查看当前车辆列表</a></li>
-        <li><a href="{% url 'vehicle_history' %}">查询历史记录</a></li>
-    </ul>
-</body>
-</html>
+{% extends 'parking/base.html' %}
+
+{% block title %}停车场管理系统 - 首页{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="display-4 mb-4">欢迎来到停车场管理系统</h1>
+    <p class="lead text-muted">高效管理车辆出入，实时查看停车记录。</p>
+
+    <div class="row justify-content-center mt-5">
+        <!-- 功能按钮：车辆入场登记 -->
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="{% url 'parking:vehicle_entry' %}" class="btn btn-primary btn-lg btn-block shadow-sm">
+                <i class="bi bi-box-arrow-in-right"></i> 车辆入场登记
+            </a>
+        </div>
+
+        <!-- 功能按钮：当前车辆列表 -->
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="{% url 'parking:vehicle_list' %}" class="btn btn-success btn-lg btn-block shadow-sm">
+                <i class="bi bi-card-list"></i> 当前车辆列表
+            </a>
+        </div>
+
+        <!-- 功能按钮：车辆历史记录 -->
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="{% url 'parking:vehicle_history' %}" class="btn btn-info btn-lg btn-block shadow-sm">
+                <i class="bi bi-clock-history"></i> 车辆历史记录
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <p class="text-muted small">为您提供简洁而强大的停车场管理体验。</p>
+    </div>
+</div>
+{% endblock %}

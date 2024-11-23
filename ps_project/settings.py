@@ -35,6 +35,9 @@ INSTALLED_APPS = [
     'parking',
     'user',
     
+    #第三方的
+    'django_bootstrap5',
+    
     #默认添加的
     'django.contrib.admin',
     'django.contrib.auth',
@@ -126,3 +129,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 我的设置
+
+LOGIN_URL = '/user/login/'  # 未登录时跳转到的页面
+LOGIN_REDIRECT_URL = 'parking:index'  # 登录成功后跳转到停车场首页
+# 注销成功后跳转到登录页面
+LOGOUT_REDIRECT_URL = 'user:login'

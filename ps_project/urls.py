@@ -16,11 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import RedirectView
+from django.shortcuts import redirect
+
+# 判断用户是否已登录，跳转到相应的页面
+def home_redirect(request):
+    if request.user.is_authenticated:
+        # 已登录用户跳转到停车管理首页
+        return redirect('parking:index')
+    else:
+        # 未登录用户跳转到登录页面
+        return redirect('user:login')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('parking/', include('parking.urls')), # 引入parking应用的路由
-    path('', RedirectView.as_view(url='/user/login/')),  # 默认跳转到登录页面
     path('user/', include('user.urls')),  # 用户认证相关功能
+    path('parking/', include('parking.urls')),  # 停车管理功能
+    path('', home_redirect),  # 根路径判断是否登录并重定向
 ]
+

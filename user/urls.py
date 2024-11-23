@@ -1,8 +1,16 @@
 from django.urls import path
-from . import views
+from django.contrib.auth import views as auth_views
+from . import views  # 导入视图文件中的函数
+
+app_name = 'user'  # 设置 app_name，确保模板中的 URL 标签可以正确解析
 
 urlpatterns = [
-    path('register/', views.register, name='register'),  # 用户注册
-    path('login/', views.login_view, name='login'),  # 用户登录
-    path('logout/', views.logout_view, name='logout'),  # 用户登出
+    # 登录视图
+    path('login/', views.login_view, name='login'),
+
+    # 注销视图
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    # 注册视图
+    path('register/', views.register, name='register'),
 ]

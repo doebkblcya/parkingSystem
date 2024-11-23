@@ -1,32 +1,40 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>车辆进场登记</title>
-</head>
-<body>
-    <h1>车辆进场登记</h1>
+{% extends 'parking/base.html' %}
 
-    <!-- 显示表单的错误信息 -->
-    {% if form.errors %}
-        <ul>
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
-    {% endif %}
+{% block title %}车辆入场登记{% endblock %}
 
-    <!-- 车辆进场登记表单 -->
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}  <!-- 以段落形式展示表单字段 -->
-        <button type="submit">提交</button>
-    </form>
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">车辆入场登记</h1>
+    
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                <!-- 表单错误显示 -->
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>提交失败：</strong> 请检查表单内容。
+                </div>
+                {% endif %}
 
-    <p><a href="{% url 'vehicle_list' %}">返回车辆列表</a></p>
-    <p><a href="{% url 'index' %}">返回主页</a></p>
-</body>
-</html>
+                <!-- 渲染表单 -->
+                {{ form.as_p }}
+
+                <!-- 提交按钮 -->
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> 提交
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="text-center mt-4">
+        <a href="{% url 'parking:index' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> 返回首页
+        </a>
+    </div>
+</div>
+{% endblock %}
