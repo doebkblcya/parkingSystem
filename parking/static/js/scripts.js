@@ -1,22 +1,15 @@
-// 动态更新当前时间
-function updateCurrentTime() {
-    const currentTimeElement = document.getElementById('current-time');
-    const now = new Date();
-    currentTimeElement.innerText = now.toLocaleString(); // 显示当地时间
-}
+document.addEventListener("DOMContentLoaded", function () {
+    // 获取侧边栏和侧边栏切换按钮
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebar-toggle");
 
-// 每秒钟更新一次时间
-setInterval(updateCurrentTime, 1000);
+    // 监听鼠标移入事件
+    sidebarToggle.addEventListener("mouseover", function () {
+        sidebar.classList.add("sidebar-open");  // 鼠标移入时显示侧边栏
+    });
 
-// 侧边栏折叠功能：鼠标悬停展开，离开收起
-const sidebar = document.getElementById('sidebar');
-
-sidebar.addEventListener('mouseenter', function () {
-    sidebar.classList.remove('sidebar-closed');
-    sidebar.classList.add('sidebar-open');
-});
-
-sidebar.addEventListener('mouseleave', function () {
-    sidebar.classList.remove('sidebar-open');
-    sidebar.classList.add('sidebar-closed');
+    // 监听鼠标移出事件
+    sidebar.addEventListener("mouseleave", function () {
+        sidebar.classList.remove("sidebar-open");  // 鼠标移出时隐藏侧边栏
+    });
 });

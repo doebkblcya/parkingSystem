@@ -2,65 +2,70 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        <h2 class="text-center mb-4">注册</h2>
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="text-center mb-4">注册</h2>
 
-        <!-- 错误提示区域 -->
-        {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <form method="POST" class="shadow-sm p-4 border rounded">
-            {% csrf_token %}
-            
-            <!-- 用户名 -->
-            <div class="mb-3">
-                <label for="id_username" class="form-label">用户名</label>
-                <input type="text" name="username" id="id_username" class="form-control" placeholder="请输入用户名" value="{{ form.username.value|default:'' }}">
-                {% if form.username.errors %}
-                    <div class="text-danger">
-                        {% for error in form.username.errors %}
+                <!-- 错误提示区域 -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert" aria-live="assertive">
+                        {% for error in form.non_field_errors %}
                             <p>{{ error }}</p>
                         {% endfor %}
                     </div>
                 {% endif %}
-            </div>
 
-            <!-- 密码 -->
-            <div class="mb-3">
-                <label for="id_password1" class="form-label">密码</label>
-                <input type="password" name="password1" id="id_password1" class="form-control" placeholder="请输入密码">
-                {% if form.password1.errors %}
-                    <div class="text-danger">
-                        {% for error in form.password1.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
+                <form method="POST" class="shadow-sm p-4" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- 用户名 -->
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">用户名</label>
+                        <input type="text" name="username" id="id_username" class="form-control" placeholder="请输入用户名" value="{{ form.username.value|default:'' }}" autofocus aria-describedby="usernameError">
+                        {% if form.username.errors %}
+                            <div id="usernameError" class="text-danger mt-1" aria-live="polite">
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
-            </div>
 
-            <!-- 确认密码 -->
-            <div class="mb-3">
-                <label for="id_password2" class="form-label">确认密码</label>
-                <input type="password" name="password2" id="id_password2" class="form-control" placeholder="请再次输入密码">
-                {% if form.password2.errors %}
-                    <div class="text-danger">
-                        {% for error in form.password2.errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
+                    <!-- 密码 -->
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">密码</label>
+                        <input type="password" name="password1" id="id_password1" class="form-control" placeholder="请输入密码" aria-describedby="passwordError">
+                        {% if form.password1.errors %}
+                            <div id="passwordError" class="text-danger mt-1" aria-live="polite">
+                                {% for error in form.password1.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
+
+                    <!-- 确认密码 -->
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label">确认密码</label>
+                        <input type="password" name="password2" id="id_password2" class="form-control" placeholder="请再次输入密码" aria-describedby="confirmPasswordError">
+                        {% if form.password2.errors %}
+                            <div id="confirmPasswordError" class="text-danger mt-1" aria-live="polite">
+                                {% for error in form.password2.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-100 py-2">注册</button>
+
+                    <!-- 登录链接 -->
+                    <div class="text-center mt-3">
+                        <a href="{% url 'user:login' %}" class="btn btn-outline-danger w-auto fs-6 py-1">已有账户？点击登录</a>
+                    </div>
+                </form>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">注册</button>
-        </form>
-
-        <div class="text-center mt-3">
-            <p>已有账户？ <a href="{% url 'user:login' %}">点击登录</a></p>
         </div>
     </div>
 </div>

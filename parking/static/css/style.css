@@ -1,70 +1,132 @@
+/* 顶部导航栏样式 */
+.navbar {
+    z-index: 1050; /* 确保导航栏始终在顶层 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #343a40;
+    color: white;
+    height: 56px; /* 固定高度 */
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f8f9fa;
+}
+
 /* 侧边栏样式 */
 #sidebar {
     position: fixed;
-    top: 0;
+    top: 56px; /* 与顶部导航栏对齐 */
     left: 0;
     width: 250px;
-    height: 100vh;
+    height: calc(100% - 56px); /* 顶部导航栏下方的全高 */
     background-color: #343a40;
-    padding-top: 20px;
-    transition: all 0.3s ease;
-    z-index: 1000;
+    color: white;
+    overflow-y: auto; /* 支持滚动 */
+    transition: transform 0.3s ease-in-out; /* 滑动效果 */
+    transform: translateX(-250px); /* 默认隐藏 */
+    z-index: 1040;
 }
 
-#sidebar.sidebar-closed {
-    width: 100px;
-}
-
+/* 侧边栏展开样式 */
 #sidebar.sidebar-open {
-    width: 250px;
+    transform: translateX(0); /* 展开侧边栏 */
 }
 
-#sidebar .nav-link {
-    color: #fff;
-    font-size: 1.2rem;
+/* 侧边栏导航项 */
+#sidebar .nav-item {
+    margin: 0;
     padding: 10px 20px;
 }
 
-#sidebar .nav-link:hover {
-    background-color: #007bff;
-    color: #fff;
-}
-
-#sidebar .nav-item {
-    margin-bottom: 10px;
-}
-
-#sidebar .navbar-brand {
-    color: #fff;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* 顶部导航栏样式 */
-.navbar {
-    background-color: #007bff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.navbar-text {
-    color: #fff;
-}
-
-/* 页面整体布局调整 */
-body {
-    background: #f4f6f9;
-    font-family: Arial, sans-serif;
-}
-
-/* 内容区域与侧边栏的间距 */
-.main-content {
-    margin-left: 250px;
-    padding: 20px;
-}
-
-/* 当前时间格式 */
-#current-time {
+#sidebar .nav-link {
+    color: white;
     font-size: 1rem;
-    font-weight: bold;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #495057;
+    color: #f8f9fa;
+}
+
+/* 图标与文字 */
+.sidebar-text {
+    margin-left: 10px;
+}
+
+/* 主内容区域样式 */
+.main-content {
+    margin-left: 250px; /* 留出侧边栏的空间 */
+    padding: 20px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* 折叠时主内容自动填满 */
+#sidebar.sidebar-closed + .main-content {
+    margin-left: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 992px) {
+    #sidebar {
+        width: 200px; /* 小屏侧边栏宽度 */
+        transform: translateX(-200px); /* 默认隐藏 */
+    }
+
+    #sidebar.sidebar-open {
+        transform: translateX(0); /* 展开侧边栏 */
+    }
+
+    .main-content {
+        margin-left: 200px;
+    }
+
+    #sidebar.sidebar-closed + .main-content {
+        margin-left: 0;
+    }
+}
+
+/* 错误提示信息样式 */
+.text-danger {
+    font-size: 0.9rem;
+}
+
+/* 按钮样式 */
+.btn {
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 卡片样式 */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+/* 表格样式 */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table-responsive {
+    margin-top: 20px;
 }

@@ -3,35 +3,16 @@
 {% block title %}停车场管理系统 - 首页{% endblock %}
 
 {% block content %}
-<div class="container text-center mt-5">
-    <h1 class="display-4 mb-4">欢迎来到停车场管理系统</h1>
-    <p class="lead text-muted">高效管理车辆出入，实时查看停车记录。</p>
-
-    <div class="row justify-content-center mt-5">
-        <!-- 功能按钮：车辆入场登记 -->
-        <div class="col-md-3 col-sm-6 mb-4">
-            <a href="{% url 'parking:vehicle_entry' %}" class="btn btn-primary btn-lg btn-block shadow-sm">
-                <i class="bi bi-box-arrow-in-right"></i> 车辆入场登记
-            </a>
+<div class="container-fluid mt-5">
+    <div class="row">
+        <!-- 右侧欢迎区 -->
+        <div class="col-12">
+            <div class="jumbotron bg-light text-center p-5 rounded-lg shadow-sm">
+                <h1 class="display-4 mb-4">欢迎来到停车场管理系统</h1>
+                <p class="lead text-muted">高效管理车辆出入，实时查看停车记录。</p>
+                <p class="text-muted small">我们为您提供简单、智能、实时的停车场管理体验。</p>
+            </div>
         </div>
-
-        <!-- 功能按钮：当前车辆列表 -->
-        <div class="col-md-3 col-sm-6 mb-4">
-            <a href="{% url 'parking:vehicle_list' %}" class="btn btn-success btn-lg btn-block shadow-sm">
-                <i class="bi bi-card-list"></i> 当前车辆列表
-            </a>
-        </div>
-
-        <!-- 功能按钮：车辆历史记录 -->
-        <div class="col-md-3 col-sm-6 mb-4">
-            <a href="{% url 'parking:vehicle_history' %}" class="btn btn-info btn-lg btn-block shadow-sm">
-                <i class="bi bi-clock-history"></i> 车辆历史记录
-            </a>
-        </div>
-    </div>
-
-    <div class="mt-5">
-        <p class="text-muted small">为您提供简洁而强大的停车场管理体验。</p>
     </div>
 </div>
 {% endblock %}
