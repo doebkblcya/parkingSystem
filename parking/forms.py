@@ -14,8 +14,13 @@ from .models import Vehicle
 class VehicleForm(forms.ModelForm):
     class Meta:
         model = Vehicle  # 关联的模型
-        fields = ['license_plate', 'vehicle_type']  # 表单中包含的字段
+        fields = ['license_plate', 'vehicle_type']  # 需要在表单中包含的字段
         widgets = {
-            'license_plate': forms.TextInput(attrs={'class': 'form-control'}),
-            'vehicle_type': forms.Select(attrs={'class': 'form-control'}),
+            'license_plate': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '请输入车牌号'}),
+            'vehicle_type': forms.Select(attrs={'class': 'form-control', 'placeholder': '请选择车辆类型'}),
+        }
+        # 自定义标签
+        labels = {
+            'license_plate': '车牌号',  
+            'vehicle_type': '车辆类型',
         }

@@ -35,8 +35,8 @@ def vehicle_exit(request, license_plate):
 
 @login_required
 def vehicle_list(request):
-    # 获取所有车辆（可以根据需要添加筛选条件）
-    vehicles = Vehicle.objects.all()
+    # 获取所有状态为 "in" 的车辆（假设在场状态为 'in'）
+    vehicles = Vehicle.objects.filter(status='in')
     return render(request, 'parking/vehicle_list.html', {'vehicles': vehicles})
 
 @login_required
