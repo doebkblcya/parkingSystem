@@ -27,6 +27,15 @@ class Vehicle(models.Model):
         ],
         default='in'
     )
+    # 缴费金额
+    payment_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name="缴费金额")
 
     def __str__(self):
         return self.license_plate
+
+class ParkingSettings(models.Model):
+    hourly_rate = models.DecimalField(max_digits=6, decimal_places=2, default=10.00, verbose_name="每小时停车费")
+    total_spots = models.PositiveIntegerField(default=100, verbose_name="总车位数")
+
+    def __str__(self):
+        return f"设置 - 每小时收费: {self.hourly_rate}元, 总车位: {self.total_spots}"

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vehicle
+from .models import Vehicle, ParkingSettings
 
 # 在Django中，通常为了处理用户提交的数据（例如车辆进场登记中的车牌号和车辆类型），会创建一个 表单类（Form Class），用于验证和处理用户输入。这是Django提供的一种标准方式，能确保用户输入的数据符合要求并简化数据保存操作。
 
@@ -23,4 +23,13 @@ class VehicleForm(forms.ModelForm):
         labels = {
             'license_plate': '车牌号',  
             'vehicle_type': '车辆类型',
+        }
+
+class ParkingSettingsForm(forms.ModelForm):
+    class Meta:
+        model = ParkingSettings
+        fields = ['hourly_rate', 'total_spots']
+        labels = {
+            'hourly_rate': '每小时停车费用',
+            'total_spots': '总车位数',
         }
