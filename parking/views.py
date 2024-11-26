@@ -3,16 +3,34 @@ from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .models import Vehicle, ParkingSettings
 from .forms import VehicleForm, ParkingSettingsForm
 from decimal import Decimal
-from django.db.models import Sum
+from django.db.models import Sum, Count
+import json
+from django.db.models.functions import TruncDay
+
+def decimal_default(obj):
+    """自定义 JSON 序列化器，用于处理 Decimal 类型"""
+    if isinstance(obj, Decimal):
+        return float(obj)  # 或用 str(obj) 转为字符串
+    raise TypeError("Type not serializable")
+
 
 @login_required
 def index(request):
-    """主页视图，展示车辆统计和最近记录"""
-    
+    """主页视图，展示车辆统计和最近记录以及停车场设置"""
+
+    # 获取停车场设置
+    try:
+        settings = ParkingSettings.objects.first()  # 获取第一个设置
+        hourly_rate = settings.hourly_rate if settings else Decimal("0.00")
+        total_spots = settings.total_spots if settings else 0
+    except ParkingSettings.DoesNotExist:
+        hourly_rate = Decimal("0.00")
+        total_spots = 0
+
     # 统计状态为 'in' 的车辆总数和各类型车辆数量
     in_vehicles = Vehicle.objects.filter(status='in')
     total_in_vehicles = in_vehicles.count()
@@ -25,25 +43,62 @@ def index(request):
     large_out_vehicles = out_vehicles.filter(vehicle_type='large').count()
     small_out_vehicles = out_vehicles.filter(vehicle_type='small').count()
 
+    # 剩余车位
+    remaining_spots = total_spots - total_in_vehicles
+
     # 统计状态为 'out' 的车辆的缴费金额总计
     total_payment_out = out_vehicles.aggregate(total_payment=Sum('payment_amount'))['total_payment'] or 0
 
     # 获取最近入场的 5 条记录
     recent_entries = in_vehicles.order_by('-entry_time')[:5]
 
-    # 渲染到模板
-    context = {
+    # 近 7 天的数据
+    today = datetime.today()
+    last_week = today - timedelta(days=7)
+
+    # 缴费金额每天总计
+    payment_trend = (
+        Vehicle.objects.filter(status='out', exit_time__range=[last_week, today])
+        .annotate(day=TruncDay('exit_time'))
+        .values('day')
+        .annotate(total_payment=Sum('payment_amount'))
+        .order_by('day')
+    )
+
+    # 日期和对应金额
+    payment_trend_labels = [entry['day'].strftime('%Y-%m-%d') for entry in payment_trend]
+    payment_trend_data = [float(entry['total_payment'] or 0) for entry in payment_trend]
+
+    # 准备用于图表的数据，转换为 JSON 格式
+    chart_data = {
         'total_in_vehicles': total_in_vehicles,
         'large_in_vehicles': large_in_vehicles,
         'small_in_vehicles': small_in_vehicles,
         'total_out_vehicles': total_out_vehicles,
         'large_out_vehicles': large_out_vehicles,
         'small_out_vehicles': small_out_vehicles,
-        'total_payment_out': total_payment_out,
-        'recent_entries': recent_entries,
+        'total_payment_out': float(total_payment_out),
+        'payment_trend_labels': payment_trend_labels,
+        'payment_trend_data': payment_trend_data,
     }
-    
+
+    context = {
+        'chart_data': json.dumps(chart_data, default=decimal_default),  # 使用自定义序列化器
+        'recent_entries': recent_entries,
+        'hourly_rate': hourly_rate,  # 每小时收费
+        'total_spots': total_spots,  # 总车位数
+        'total_in_vehicles': total_in_vehicles,  # 在场车辆总数
+        'large_in_vehicles': large_in_vehicles,
+        'small_in_vehicles': small_in_vehicles,
+        'total_out_vehicles': total_out_vehicles,
+        'large_out_vehicles': large_out_vehicles,
+        'small_out_vehicles': small_out_vehicles,
+        'total_payment_out': total_payment_out,
+        'remaining_spots': remaining_spots,  # 剩余车位
+    }
+
     return render(request, 'parking/index.html', context)
+
 
 
 @login_required

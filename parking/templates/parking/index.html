@@ -1,6 +1,5 @@
 {% extends 'parking/base.html' %}
 {% load static %}
-
 {% block title %}停车场管理系统 - 首页{% endblock %}
 
 {% block content %}
@@ -19,10 +18,11 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">停车场数据概览</h1>
     <div class="row text-center mb-4">
+        <!-- 第一行数据 -->
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">总车辆数</h5>
+                    <h5 class="card-title">在场总车辆数</h5>
                     <p class="card-text display-4">{{ total_in_vehicles }}</p>
                 </div>
             </div>
@@ -30,22 +30,63 @@
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">大型车辆</h5>
-                    <p class="card-text display-4">{{ large_in_vehicles }}</p>
+                    <h5 class="card-title">在场小型车数</h5>
+                    <p class="card-text display-4">{{ small_in_vehicles }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">小型车辆</h5>
-                    <p class="card-text display-4">{{ small_in_vehicles }}</p>
+                    <h5 class="card-title">在场大型车数</h5>
+                    <p class="card-text display-4">{{ large_in_vehicles }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <h2 class="text-center mb-3">最近入场车辆</h2>
+    <div class="row text-center mb-4">
+        <!-- 第二行数据 -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">剩余车位</h5>
+                    <p class="card-text display-4">{{ remaining_spots }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">每小时收费</h5>
+                    <p class="card-text display-4">{{ hourly_rate }} </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">总车位数</h5>
+                    <p class="card-text display-4">{{ total_spots }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center mb-4">
+        <!-- 第三行数据 -->
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">缴费金额总计</h5>
+                    <p class="card-text display-4">{{ total_payment_out|floatformat:2 }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最近入场记录 -->
+    <h2 class="text-center mt-5 mb-3">最近入场车辆</h2>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -57,27 +98,70 @@
             </thead>
             <tbody>
                 {% for vehicle in recent_entries %}
-                    <tr>
-                        <td>{{ vehicle.license_plate }}</td>
-                        <td>{{ vehicle.entry_time|date:"Y-m-d H:i:s" }}</td>
-                        <td>{{ vehicle.vehicle_type|yesno:"大型车,小型车" }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ vehicle.license_plate }}</td>
+                    <td>{{ vehicle.entry_time|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if vehicle.vehicle_type == 'small' %}
+                            小型车
+                        {% elif vehicle.vehicle_type == 'large' %}
+                            大型车
+                        {% else %}
+                            未知类型
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+</div>
 
-    <h2 class="text-center mb-3">车辆统计图</h2>
+<div class="container mt-5">
+    <!-- <h2 class="text-center mb-4">车辆数据可视化</h2> -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">在场车辆构成</h5>
+                    <canvas id="chartInVehicles"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">离场车辆构成</h5>
+                    <canvas id="chartOutVehicles"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12">
-            <canvas id="vehicleChart"></canvas>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">在场与离场车辆数量对比</h5>
+                    <canvas id="chartComparison"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-center">近 7 天缴费金额变化</h5>
+                    <canvas id="chartPaymentTrend"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- 引入 Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!-- 引入自定义的 JS -->
-<script src="{% static 'js/chart.js' %}"></script>
-{% endblock %}
+<script id="chartData" type="application/json">
+    {{ chart_data|safe }}
+</script>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/chart.js' %}"></script>
+
+{% endblock %}
