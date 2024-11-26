@@ -130,3 +130,83 @@
 .table-responsive {
     margin-top: 20px;
 }
+
+/* 自定义弹窗样式 */
+.custom-alert {
+    position: fixed;
+    bottom: 20px;  /* 距离底部20px */
+    left: 50%;
+    transform: translateX(-50%);  /* 水平居中 */
+    width: 80%;  /* 宽度为80% */
+    max-width: 500px;  /* 最大宽度限制 */
+    background-color: #6c757d;  /* 灰色背景 */
+    color: white;  /* 白色字体 */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1050; /* 确保弹窗显示在最上层 */
+    opacity: 0;  /* 初始透明度为0 */
+    animation: fadeIn 1s forwards, fadeOut 2s 4s forwards;  /* 显示和隐藏的动画 */
+}
+
+/* 动画效果：fadeIn 和 fadeOut */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px); /* 初始位置稍微下移 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);  /* 结束时回到正常位置 */
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px); /* 向下移动 */
+    }
+}
+
+/* 固定顶部导航栏 */
+.navbar {
+    position: fixed;  /* 固定在页面顶部 */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;  /* 确保导航栏在最前面 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);  /* 添加阴影效果 */
+}
+
+/* 固定侧边栏 */
+#sidebar {
+    position: fixed;  /* 固定在页面左侧 */
+    top: 56px;  /* 距离顶部导航栏的高度 */
+    left: 0;
+    width: 250px;
+    height: 100%;  /* 侧边栏高度撑满整个页面 */
+    background-color: #343a40;
+    color: white;
+    z-index: 1040;  /* 确保侧边栏在导航栏下方 */
+    transition: transform 0.3s ease-in-out; /* 滑动效果 */
+}
+
+/* 主内容区域在侧边栏右侧 */
+.main-content {
+    margin-left: 250px;  /* 留出侧边栏的空间 */
+    padding-top: 56px;  /* 留出顶部导航栏的空间 */
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* 响应式调整：小屏幕时，侧边栏宽度缩小 */
+@media (max-width: 992px) {
+    #sidebar {
+        width: 200px;  /* 小屏幕时侧边栏宽度减少 */
+    }
+    .main-content {
+        margin-left: 200px;
+    }
+}

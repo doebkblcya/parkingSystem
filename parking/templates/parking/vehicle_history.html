@@ -17,6 +17,7 @@
                                 <th scope="col">入场时间</th>
                                 <th scope="col">出场时间</th>
                                 <th scope="col">车辆类型</th>
+                                <th scope="col">缴费金额 (元)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -32,6 +33,7 @@
                                             小型车
                                         {% endif %}
                                     </td>
+                                    <td>{{ vehicle.payment_amount|default:"0.00" }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

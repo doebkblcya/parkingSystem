@@ -8,7 +8,7 @@ from django.db import models
 # exit_time：离开停车场的时间（日期时间，可为空）。
 # status：当前状态（选择字段，例如 "在场" 或 "已离开"）。
 class Vehicle(models.Model):
-    license_plate = models.CharField(max_length=20, unique=True)
+    license_plate = models.CharField(max_length=20)
     vehicle_type = models.CharField(
         max_length=20,
         choices=[

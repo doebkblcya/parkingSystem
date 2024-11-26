@@ -24,7 +24,7 @@
                     {% if form.license_plate.errors %}
                         <div class="text-danger">
                             {% for error in form.license_plate.errors %}
-                                <p>重复的车牌号</p>
+                                <p>{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
