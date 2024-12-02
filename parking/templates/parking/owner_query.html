@@ -1,0 +1,88 @@
+{% extends 'parking/owner_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">车辆查询</h1>
+    
+    <div class="card shadow-sm border-light">
+        <div class="card-body">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <!-- 查询表单 -->
+                    <form method="GET" class="mb-4">
+                        <label for="plateNumber" class="form-label">车牌号码</label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="plateNumber"
+                                   name="plate_number" 
+                                   placeholder="请输入车牌号码"
+                                   value="{{ request.GET.plate_number|default:'' }}">
+                            <button type="submit" class="btn btn-danger btn-lg">查询</button>
+                        </div>
+                    </form>
+
+                    <!-- 查询结果显示区域 -->
+                    {% if query_result %}
+                        <div class="table-responsive mt-4">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col">车牌号</th>
+                                        <th scope="col">入场时间</th>
+                                        {% if query_result.status == 'out' %}
+                                            <th scope="col">出场时间</th>
+                                        {% endif %}
+                                        <th scope="col">停车时长</th>
+                                        <th scope="col">{% if query_result.status == 'in' %}当前费用{% else %}缴费金额{% endif %}</th>
+                                        <th scope="col">状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if query_result.status != 'not_found' %}
+                                        <tr>
+                                            <td>{{ request.GET.plate_number }}</td>
+                                            <td>{{ query_result.entry_time }}</td>
+                                            {% if query_result.status == 'out' %}
+                                                <td>{{ query_result.exit_time }}</td>
+                                            {% endif %}
+                                            <td>{{ query_result.duration }}</td>
+                                            <td>{{ query_result.fee }} 元</td>
+                                            <td>
+                                                {% if query_result.status == 'in' %}
+                                                    <span class="badge bg-success">在场</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">已离场</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">
+                                                {{ query_result.message }}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 使用说明 -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="card-title">使用说明</h5>
+            <ul class="mb-0">
+                <li>请输入完整的车牌号码进行查询</li>
+                <li>可查询车辆的入场时间、停车时长和当前费用</li>
+                <li>如遇查询问题，请联系管理员</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

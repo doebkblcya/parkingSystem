@@ -1,18 +1,17 @@
-{% extends "parking/base.html" %}
-{% load django_bootstrap5 %}
+{% extends 'parking/owner_base.html' %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h2 class="text-center mb-4">管理员登录</h2>
+                <h2 class="text-center mb-4">车主登录</h2>
 
                 <!-- 错误提示区域 -->
                 {% if form.non_field_errors %}
                     <div class="alert alert-danger" role="alert" aria-live="assertive">
                         {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
+                            <p class="mb-0">{{ error }}</p>
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -23,11 +22,18 @@
                     <!-- 用户名 -->
                     <div class="mb-3">
                         <label for="id_username" class="form-label">用户名</label>
-                        <input type="text" name="username" id="id_username" class="form-control" placeholder="请输入用户名" value="{{ form.username.value|default:'' }}" autofocus aria-describedby="usernameError">
+                        <input type="text" 
+                               name="username" 
+                               id="id_username" 
+                               class="form-control" 
+                               placeholder="请输入用户名" 
+                               value="{{ form.username.value|default:'' }}" 
+                               autofocus 
+                               aria-describedby="usernameError">
                         {% if form.username.errors %}
                             <div id="usernameError" class="text-danger mt-1" aria-live="polite">
                                 {% for error in form.username.errors %}
-                                    <p>{{ error }}</p>
+                                    <p class="mb-0">{{ error }}</p>
                                 {% endfor %}
                             </div>
                         {% endif %}
@@ -36,11 +42,16 @@
                     <!-- 密码 -->
                     <div class="mb-3">
                         <label for="id_password" class="form-label">密码</label>
-                        <input type="password" name="password" id="id_password" class="form-control" placeholder="请输入密码" aria-describedby="passwordError">
+                        <input type="password" 
+                               name="password" 
+                               id="id_password" 
+                               class="form-control" 
+                               placeholder="请输入密码" 
+                               aria-describedby="passwordError">
                         {% if form.password.errors %}
                             <div id="passwordError" class="text-danger mt-1" aria-live="polite">
                                 {% for error in form.password.errors %}
-                                    <p>{{ error }}</p>
+                                    <p class="mb-0">{{ error }}</p>
                                 {% endfor %}
                             </div>
                         {% endif %}
@@ -53,14 +64,14 @@
                     </div>
                 </form>
 
-                <!-- 添加车主入口 -->
+                <!-- 添加管理员入口 -->
                 <div class="text-center mt-4">
                     <hr>
-                    <p class="text-muted">您是车主？</p>
-                    <a href="{% url 'user:owner_login' %}" class="btn btn-outline-danger w-100">车主登录</a>
+                    <p class="text-muted">您是管理员？</p>
+                    <a href="{% url 'user:login' %}" class="btn btn-outline-danger w-100">管理员登录</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} 

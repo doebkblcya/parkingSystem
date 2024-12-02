@@ -135,3 +135,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/user/login/'  # 未登录时跳转到的页面
 LOGIN_REDIRECT_URL = 'parking:index'  # 登录成功后跳转到停车场首页
 LOGOUT_REDIRECT_URL = 'user:login' # 注销成功后跳转到登录页面
+
+AUTH_USER_MODEL = 'user.CustomUser'

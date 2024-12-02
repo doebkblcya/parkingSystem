@@ -10,6 +10,8 @@ from decimal import Decimal
 from django.db.models import Sum, Count
 import json
 from django.db.models.functions import TruncDay
+from django.http import JsonResponse
+from django.utils import timezone
 
 def decimal_default(obj):
     """自定义 JSON 序列化器，用于处理 Decimal 类型"""
@@ -207,3 +209,102 @@ def settings_view(request):
     else:
         form = ParkingSettingsForm(instance=settings_instance)
     return render(request, 'parking/settings.html', {'form': form})
+
+@login_required
+def owner_dashboard(request):
+    """车主主页视图"""
+    if request.user.user_type != 'owner':
+        messages.error(request, '您没有权限访问此页面')
+        return redirect('user:login')
+    
+    # 获取停车场设置信息
+    settings = ParkingSettings.objects.first()
+    total_spots = settings.total_spots if settings else 0
+    hourly_rate = settings.hourly_rate if settings else 0
+    
+    # 获取已占用车位数量
+    occupied_spaces = Vehicle.objects.filter(status='in').count()
+    available_spaces = total_spots - occupied_spaces
+    
+    context = {
+        'total_spots': total_spots,
+        'available_spaces': available_spaces,
+        'occupied_spaces': occupied_spaces,
+        'hourly_rate': hourly_rate,
+    }
+    return render(request, 'parking/owner_dashboard.html', context)
+
+@login_required
+def owner_query_page(request):
+    """车主查询页面视图"""
+    if request.user.user_type != 'owner':
+        messages.error(request, '您没有权限访问此页面')
+        return redirect('user:login')
+        
+    if request.method == 'GET' and 'plate_number' in request.GET:
+        plate_number = request.GET.get('plate_number', '').strip()
+        if plate_number:
+            try:
+                # 先查找在场车辆
+                vehicle = Vehicle.objects.get(
+                    license_plate=plate_number,
+                    status='in'
+                )
+                
+                # 计算停车时长和费用
+                duration = timezone.now() - vehicle.entry_time
+                hours = Decimal(duration.total_seconds()) / Decimal('3600')
+                settings = ParkingSettings.objects.first()
+                hourly_rate = Decimal(str(settings.hourly_rate)) if settings else Decimal('0')
+                fee = hours * hourly_rate
+                
+                context = {
+                    'query_result': {
+                        'status': 'in',
+                        'entry_time': vehicle.entry_time.strftime('%Y-%m-%d %H:%M:%S'),
+                        'duration': f'{int(hours)}小时{int((hours % 1) * 60)}分钟',
+                        'fee': round(fee, 2)
+                    }
+                }
+            except Vehicle.DoesNotExist:
+                try:
+                    # 查找最近一次出场记录
+                    vehicle = Vehicle.objects.filter(
+                        license_plate=plate_number,
+                        status='out'
+                    ).order_by('-exit_time').first()
+                    
+                    if vehicle:
+                        # 计算停车时长
+                        duration = vehicle.exit_time - vehicle.entry_time
+                        hours = Decimal(duration.total_seconds()) / Decimal('3600')
+                        
+                        context = {
+                            'query_result': {
+                                'status': 'out',
+                                'entry_time': vehicle.entry_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                'exit_time': vehicle.exit_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                'duration': f'{int(hours)}小时{int((hours % 1) * 60)}分钟',
+                                'fee': vehicle.payment_amount
+                            }
+                        }
+                    else:
+                        context = {
+                            'query_result': {
+                                'status': 'not_found',
+                                'message': '未找到该车辆的停车记录'
+                            }
+                        }
+                except Exception as e:
+                    context = {
+                        'query_result': {
+                            'status': 'not_found',
+                            'message': '未找到该车辆的停车记录'
+                        }
+                    }
+        else:
+            context = {}
+    else:
+        context = {}
+        
+    return render(request, 'parking/owner_query.html', context)

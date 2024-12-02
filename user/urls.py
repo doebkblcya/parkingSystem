@@ -13,4 +13,7 @@ urlpatterns = [
 
     # 注册视图
     path('register/', views.register, name='register'),
+
+    # 车主登录视图
+    path('owner/login/', views.owner_login_view, name='owner_login'),
 ]

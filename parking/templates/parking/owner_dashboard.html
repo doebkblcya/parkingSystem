@@ -1,0 +1,69 @@
+{% extends 'parking/owner_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron bg-light text-center p-5 rounded-lg shadow-sm">
+                <h1 class="display-4 mb-4">欢迎使用停车场查询系统</h1>
+                <p class="lead text-muted">实时查看车位情况，便捷查询停车费用。</p>
+                <p class="text-muted small">我们为您提供简单、智能、实时的停车信息查询服务。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">停车场实时信息</h1>
+    <div class="row text-center mb-4">
+        <!-- 车位信息 -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">总车位数</h5>
+                    <p class="card-text display-4">{{ total_spots }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">已占车位</h5>
+                    <p class="card-text display-4">{{ occupied_spaces }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">剩余车位</h5>
+                    <p class="card-text display-4">{{ available_spaces }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 收费信息 -->
+    <div class="row text-center">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">当前收费标准</h5>
+                    <p class="card-text display-4">{{ hourly_rate }} 元/小时</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示信息 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info text-center" role="alert">
+                <h5 class="alert-heading mb-2">温馨提示</h5>
+                <p class="mb-0">您可以通过侧边栏的"车辆查询"功能查询您的车辆停车时长和费用信息。</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
